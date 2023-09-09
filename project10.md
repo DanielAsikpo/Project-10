@@ -36,13 +36,15 @@ Let us get started!
 
 2. Update **/etc/hosts** file for local DNS with Web Servers’ names (e.g. Web1 and Web2) and their local IP addresses
 
+![Images](./Images/Screenshot_2.png)
+
 3. Install and configure Nginx as a load balancer to point traffic to the resolvable DNS names of the webservers
 
 Update the instance and Install Nginx
 
 ```
-sudo apt update
-sudo apt install nginx
+sudo apt update -y
+sudo apt install nginx -y
 ```
 
 Configure Nginx LB using Web Servers’ names defined in **/etc/hosts**
@@ -75,6 +77,7 @@ server {
 #comment out this line
 #include /etc/nginx/sites-enabled/*;
 ```
+![Images](./Images/Screenshot_3.png)
 
 Restart Nginx and make sure the service is up and running
 
@@ -97,13 +100,47 @@ In order to get a valid SSL certificate – you need to register a new domain na
 
 You might have noticed, that every time you restart or stop/start your EC2 instance – you get a new public IP address. When you want to associate your domain name – it is better to have a static IP address that does not change after reboot. Elastic IP is the solution for this problem, learn how to allocate an Elastic IP and associate it with an EC2 server [on this page](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html).
 
-3. Update **A record** in your registrar to point to Nginx LB using Elastic IP address
+3. Update [A record](https://www.cloudflare.com/learning/dns/dns-records/dns-a-record/) in your registrar to point to Nginx LB using Elastic IP address
 
-Learn how associate your domain name to your Elastic IP [on this page.](https://medium.com/progress-on-ios-development/connecting-an-ec2-instance-with-a-godaddy-domain-e74ff190c233).
+Learn how associate your domain name to your Elastic IP [on this page.](https://medium.com/progress-on-ios-development/connecting-an-ec2-instance-with-a-godaddy-domain-e74ff190c233). Using Route53 on AWS,
+- Create a hosted zone
+- Connect Route53 and the domain name to each other
+- Create A record to point to Nginx LB using Elastic IP address
+- In your domain name portal, Update the DNS with values gotten from route 53.
+
+To create a hosted zone, do the following;
+
+![Images](./Images/Screenshot_4.png)
+
+![Images](./Images/Screenshot_5.png)
+
+![Images](./Images/Screenshot_6.png)
+
+To connect Route53 hosted zone to the domain name, we need to copy the value from route 53 to the domain name server
+
+![Images](./Images/Screenshot_7.png)
+
+![Images](./Images/Screenshot_8.png)
+
+![Images](./Images/Screenshot_9.png)
+
+To create a record to point to Nginx LB using Elastic IP address, do the following;
+
+![Images](./Images/Screenshot_10.png)
+
+Create another record
+
+![Images](./Images/Screenshot_11.png)
+
+All three (Load balancer, route53 and domain name) have been connected together!
+
 
 **Side Self Study:** Read about different [DNS record types](https://www.cloudflare.com/learning/dns/dns-records/) and learn what they are used for.
 
 Check that your Web Servers can be reached from your browser using new domain name using HTTP protocol – `http://<your-domain-name.com>`
+
+![Images](./Images/Screenshot_12.png)
+
 
 4. Configure Nginx to recognize your new domain name
 
@@ -119,6 +156,8 @@ Install certbot
 
 `sudo snap install --classic certbot`
 
+![Images](./Images/Screenshot_13.png)
+
 Request your certificate (just follow the certbot instructions – you will need to choose which domain you want your certificate to be issued for, domain name will be looked up from nginx.conf file so make sure you have updated it on step 4).
 
 ```
@@ -126,7 +165,11 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo certbot --nginx
 ```
 
+![Images](./Images/Screenshot_14.png)
+
 Test secured access to your Web Solution by trying to reach `https://<your-domain-name.com>`
+
+![Images](./Images/Screenshot_15.png)
 
 You shall be able to access your website by using HTTPS protocol (that uses TCP port 443) and see a padlock pictogram in your browser’s search string.
 
@@ -147,7 +190,10 @@ To do so, lets edit the crontab file with the following command:
 `crontab -e`
 
 Add following line:
+
 `* */12 * * *   root /usr/bin/certbot renew > /dev/null 2>&1`
+
+![Images](./Images/Screenshot_16.png)
 
 You can always change the interval of this cronjob if twice a day is too often by adjusting schedule expression.
 
