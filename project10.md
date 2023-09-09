@@ -14,7 +14,7 @@ SSL/TLS uses [digital certificates](https://en.wikipedia.org/wiki/Public_key_cer
 
 There are different types of SSL/TLS certificates – you can learn more about them [here.](https://blog.hubspot.com/marketing/what-is-ssl) You can also watch a tutorial on how SSL works here or an additional resource [here.](https://youtu.be/SJJmoDZ3il8)
 
-In this project you will register your website with [LetsEnrcypt](https://letsencrypt.org/) Certificate Authority, to automate certificate issuance you will use a shell client recommended by LetsEncrypt – [cetrbot.](https://certbot.eff.org/)
+In this project you will register your website with [LetsEnrcypt](https://letsencrypt.org/) Certificate Authority, to automate certificate issuance you will use a shell client recommended by LetsEncrypt – [certbot.](https://certbot.eff.org/)
 
 ## **Task**
 
